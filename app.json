@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "Dwellio",
+    "slug": "Dwellio",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "restate",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "expo": {
+    "scheme": "yourapp",
+    "platforms": ["android", "ios", "web"]
+  },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#1e1e1e"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "resizeMode": "cover",
+          "enableFullScreenImage_legacy":true,
+          "backgroundColor": "#1e1e1e"
+        }
+      ],
+
+      [
+        "expo-font",
+        {
+          "fonts":[
+            "./assets/fonts/Rubik-Bold.ttf",
+            "./assets/fonts/Rubik-ExtraBold.ttf",
+            "./assets/fonts/Rubik-Light.ttf",
+            "./assets/fonts/Rubik-Medium.ttf",
+            "./assets/fonts/Rubik-Regular.ttf",
+            "./assets/fonts/Rubik-SemiBold.ttf",
+            "./assets/fonts/SpaceMono-Regular.ttf"
+          ]
+        }
+      ]
+    ],
+    
+    
+
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
