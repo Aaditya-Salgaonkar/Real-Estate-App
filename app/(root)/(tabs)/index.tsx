@@ -7,10 +7,10 @@ import {
   FlatList,
   Button
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React, { useState, useEffect } from "react";
 import { Client, Account } from "react-native-appwrite";
-import { useRouter } from "expo-router";
+import { useRouter,router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import { Image } from "react-native";
@@ -20,6 +20,10 @@ import { Cards, FeaturedCard } from "@/components/Card";
 import Filters from "@/components/Filters";
 import { useGlobalContext } from "@/lib/global-provider";
 import Seed from "@/lib/seed";
+import { useAppwrite } from "@/lib/useAppwrite";
+import { getLatestProperties,getProperties } from "@/lib/appwrite";
+import NoResults from "@/components/NoResults";
+
 //Flatlist over scrolllist
 
 interface User {
@@ -30,8 +34,34 @@ interface User {
 export default function Index() {
 
   const {user} =useGlobalContext();
+  const params=useLocalSearchParams<{query?:string;filter?:string;}>();
+
+  const {data : latestProperties ,loading : latestPropertiesLoading} = useAppwrite({
+    fn:getLatestProperties
+  });
+
+  const {data:properties ,loading, refetch} = useAppwrite({
+    fn:getProperties,
+    params:{
+      filter:params.filter!,
+      query:params.query!,
+      limit:6,
+    },
+    skip:true,
+  });
+
+  useEffect(()=>{
+    refetch({
+      filter:params.filter!,
+      query:params.query!,
+      limit:6
+    });
+  },[params.filter,params.query]);
+  const handleCardPress =(id:string) => router.push(`/properties/${id}`);
+
+
   const [User, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [Loading, setLoading] = useState(true);
   const router = useRouter();
 
   const client = new Client()
@@ -39,6 +69,9 @@ export default function Index() {
     .setProject("676d61c5000c4f1f734c"); // Replace with your project ID
 
   const account = new Account(client);
+
+  
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -57,7 +90,7 @@ export default function Index() {
     checkAuth();
   }, [router]);
 
-  if (loading) {
+  if (Loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -67,29 +100,37 @@ export default function Index() {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      <Button title="Seed" onPress={Seed} />
+      {/* 
+      for data seeding : 
+      <Button title="Seed" onPress={Seed} /> */}
       <FlatList
-        data={[1, 2,3,4]}
-        renderItem={({ item }) => <Cards />}
-        keyExtractor={(item) => item.toString()}
+        data={properties}
+        renderItem={({ item }) => <Cards item={item} onPress={()=>handleCardPress(item.$id)} />}
+        keyExtractor={(item, index) => item?.$id || index.toString()}
+        // keyExtractor={(item) => item.toString()}
         numColumns={2}
         contentContainerClassName="pb-32"
         columnWrapperClassName="flex gap-5 px-5"
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          loading ? (
+            <ActivityIndicator size='large' className="text-primary-300 mt-5" />
+          ): <NoResults />
+        }
         ListHeaderComponent={
           <View className="px-5">
             <View className="flex flex-row items-center justify-between mt-5">
               <View className="flex flex-row items-center">
                 <Image
                   source={{uri:user?.avatar}}
-                  className="size-12 rounded-full"
+                  className="size-12 rounded-full border-primary-500 border-2"
                 />
                 <View className="flex flex-col items-start ml-3 justify-center">
                   <Text className="text-xs font-rubik-bold text-black-100">
                     Good Day!
                   </Text>
                   <Text className="text-base font-rubik-bold text-black-300">
-                    Aaditya
+                    {user?.name}
                   </Text>
                 </View>
               </View>
@@ -109,15 +150,21 @@ export default function Index() {
                 </TouchableOpacity>
               </View>
 
+
+              {latestPropertiesLoading?
+                <ActivityIndicator size="large" className="text-primary-300" /> : !latestProperties||latestProperties.length ===0 ? <NoResults /> : (
+              
+
               <FlatList
-                data={[5,6,7]}
-                renderItem={({ item }) => <FeaturedCard />}
-                keyExtractor={(item) => item.toString()}
+                data={latestProperties}
+                renderItem={({ item }) => <FeaturedCard item={item} onPress={()=>handleCardPress(item.$id)} />}
+                // keyExtractor={(item) => item.toString()}
+                keyExtractor={(item, index) => item?.$id || index.toString()}
                 horizontal
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
                 contentContainerClassName="flex gap-5 mt-5"
-              />
+              />  )}
 
 
               <View className="flex flex-row items-center justify-between mt-5">
@@ -132,10 +179,9 @@ export default function Index() {
               </View>
               <Filters />
 
-              <View className="flex flex-row gap-5 mt-5">
-                <Cards />
-                <Cards />
-              </View>
+              {/* <View className="flex flex-row gap-5 mt-5">
+                <FIlters />
+              </View> */}
             </View>
           </View>
         }

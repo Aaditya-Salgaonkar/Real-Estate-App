@@ -51,7 +51,7 @@ const signin = () => {
             </Text>
             <TouchableOpacity
               onPress={handleLogin}
-              className="bg-gold-light shadow-md shadow-zinc-400 rounded-full mb-14 w-full py-4 mt-5"
+              className="bg-primary-1200 shadow-md shadow-zinc-400 rounded-full mb-14 w-full py-4 mt-5"
             >
               <View className="flex flex-row items-center justify-center">
                 <Image

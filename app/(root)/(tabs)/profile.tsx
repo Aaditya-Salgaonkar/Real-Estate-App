@@ -47,12 +47,12 @@ const profile = () => {
   const handleLogout = async () => {
     const result = await logout();
     if (result) {
-      Alert.alert("Sad to see you go", "You have been Logged out Successfully");
+      Alert.alert("👋 See You Soon!","You’ve logged out successfully. But don’t stay away too long!\n🔥 Exciting features and updates are always around the corner.\n\n💻 From me, Aaditya Salgaonkar, to you—thanks for being a part of Dwellio.");
       refetch();
     } else {
       Alert.alert(
-        "Watch Out!",
-        "An error has occurred.\nPlease report the issue to Aaditya"
+        "⚡ Oops! Something’s Not Right",
+        "We couldn’t log you in this time. Double-check your credentials or reset your password if needed.\n\n💬 Need help? \nGet in touch with the developer of this app"
       );
     }
   };
