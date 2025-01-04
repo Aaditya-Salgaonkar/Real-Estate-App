@@ -12,14 +12,19 @@
       "supportsTablet": true
     },
     "expo": {
-    "scheme": "yourapp",
-    "platforms": ["android", "ios", "web"]
-  },
+      "scheme": "yourapp",
+      "platforms": [
+        "android",
+        "ios",
+        "web"
+      ]
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#1e1e1e"
-      }
+      },
+      "package": "com.aadityasalgaonkar.Dwellio"
     },
     "web": {
       "bundler": "metro",
@@ -33,15 +38,14 @@
         {
           "image": "./assets/images/icon.png",
           "resizeMode": "cover",
-          "enableFullScreenImage_legacy":true,
+          "enableFullScreenImage_legacy": true,
           "backgroundColor": "#1e1e1e"
         }
       ],
-
       [
         "expo-font",
         {
-          "fonts":[
+          "fonts": [
             "./assets/fonts/Rubik-Bold.ttf",
             "./assets/fonts/Rubik-ExtraBold.ttf",
             "./assets/fonts/Rubik-Light.ttf",
@@ -53,11 +57,16 @@
         }
       ]
     ],
-    
-    
-
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "232191af-8240-4dcc-9d2d-3b86a5ae3f14"
+      }
     }
   }
 }
